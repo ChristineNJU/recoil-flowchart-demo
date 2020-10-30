@@ -15,9 +15,12 @@ declare namespace FC {
     offset?: IPosition;
     position: IPortPosition;
   }
+  type INodeType = "Func" | "Selector" | "Input" | "Join";
   interface INode {
     id: string;
-    type: string;
+    type: INodeType;
+    data?: any;
+    name: string;
     position: IPosition;
     orientation?: number;
     readonly?: boolean;

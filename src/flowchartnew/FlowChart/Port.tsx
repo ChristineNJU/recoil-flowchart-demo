@@ -2,9 +2,6 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import {
   portPositionFamily,
-  linkStateFamily,
-  linksState,
-  newLinkState,
   useStartNewLink,
 } from "../../states/flowchartState";
 import { useSetRecoilState, useRecoilState } from "recoil";

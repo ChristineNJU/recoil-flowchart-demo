@@ -22,7 +22,24 @@ const Link: React.FC<LinkProps> = (props) => {
         right: 0,
       }}
     >
-      <path d={points} strokeWidth="3" stroke="cornflowerblue" fill="none" />
+      {/* <marker
+        id="markerArrow"
+        markerWidth="13"
+        markerHeight="13"
+        refX="10"
+        refY="6"
+        orient="auto"
+      >
+        <path d="M2,2 L2,11 L10,6 L2,2" fill="cornflowerblue" />
+      </marker> */}
+
+      <path
+        d={points}
+        strokeWidth="3"
+        stroke="cornflowerblue"
+        fill="none"
+        marker-end="url(#markerArrow)"
+      />
     </svg>
   );
 };

@@ -2,33 +2,29 @@ import React from "react";
 import { RecoilRoot } from "recoil";
 import Panel from "./containers/Panel";
 import Menu from "./containers/Menu";
+import LeftMenu from "./containers/LeftMenu";
+import { RightEditor } from "./containers/RightEditor";
 import styled from "styled-components";
+import "./App.css";
 
-const BG = styled.div`
-  // min-height: 100vh;
-`;
-
-const Header = styled.header`
-  background-color: #282c34;
-  position: absolute;
-  width: 100vw;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 20px;
-  color: white;
-  z-index: 100;
+const MainWrapper = styled.div`
+  position: relative;
+  height: 100vh;
+  padding-top: 40px;
+  box-sizing: border-box;
 `;
 
 function App() {
   return (
     <RecoilRoot>
-      <BG>
-        <Menu></Menu>
+      {/* <BG> */}
+      <Menu></Menu>
+      <MainWrapper>
+        <LeftMenu></LeftMenu>
         <Panel></Panel>
-      </BG>
+        <RightEditor></RightEditor>
+      </MainWrapper>
+      {/* </BG> */}
     </RecoilRoot>
   );
 }

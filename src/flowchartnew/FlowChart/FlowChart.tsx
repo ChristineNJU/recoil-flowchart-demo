@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
-import Draggable from "react-draggable";
-import { useRecoilState, useRecoilCallback } from "recoil";
+import { useRecoilValue } from "recoil";
 import Node from "./Node";
 import Link from "./Link";
 import {
   nodesState,
   linksState,
-  nodeStateFamily,
-  useAddNode,
   useInitNodeAndLinks,
   useMoveNewLink,
   useDownNewLink,
@@ -16,7 +13,7 @@ import styled from "styled-components";
 import NewLink from "./NewLink";
 
 const CanvasWrapper = styled.div`
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
   background: #eee;
@@ -28,9 +25,8 @@ export interface IFlowChartProps {
 
 export const FlowChart = (props: IFlowChartProps) => {
   const { chart } = props;
-  const [nodesId, setNodesId] = useRecoilState(nodesState);
-  const [linksId, setLinksId] = useRecoilState(linksState);
-  const addNode = useAddNode();
+  const nodesId = useRecoilValue(nodesState);
+  const linksId = useRecoilValue(linksState);
   const initChart = useInitNodeAndLinks();
   const handleNewLinkMove = useMoveNewLink();
   const handleNewLinkDown = useDownNewLink();

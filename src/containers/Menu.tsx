@@ -1,7 +1,5 @@
 import React from "react";
-import { PlusCircleFilled } from "@ant-design/icons";
 import styled from "styled-components";
-import { useAddNode } from "../states/flowchartState";
 
 const MenuWrapper = styled.header`
   position: fixed;
@@ -18,16 +16,9 @@ const MenuWrapper = styled.header`
   z-index: 999;
 `;
 const Menu: React.FC = () => {
-  const addNode = useAddNode();
-
   return (
     <MenuWrapper>
       <h3>菜单</h3>
-      <PlusCircleFilled
-        onClick={() => {
-          addNode();
-        }}
-      />
     </MenuWrapper>
   );
 };

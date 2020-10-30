@@ -1,9 +1,10 @@
 import React from "react";
-import Draggable, { DraggableCore } from "react-draggable";
-import { useRecoilValue, useRecoilState } from "recoil";
-import styled, { StyledComponent } from "styled-components";
+import Draggable from "react-draggable";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styled from "styled-components";
 import Port from "./Port";
-import { nodeStateFamily, nodesState } from "../../states/flowchartState";
+import { nodeStateFamily } from "../../states/flowchartState";
+import { ShowEditState, EditDataState } from "../../states/codeState";
 
 const NodeWrapper = styled.div`
   position: absolute;
@@ -16,6 +17,9 @@ const NodeWrapper = styled.div`
 const InnerWrapper = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: white;
 `;
 
@@ -50,6 +54,11 @@ const BottomPortsWrapper = styled(PortsWrapper)`
   /* transform: translate(-50%, 50%); */
   flex-direction: row;
 `;
+const Content = styled.p`
+  text-align: center;
+  cursor: default;
+`;
+
 const POSITIONS: FC.IPortPosition[] = ["Left", "Top", "Right", "Bottom"];
 const PortsWrapperMap = {
   Left: LeftPortsWrapper,
@@ -66,7 +75,8 @@ const Node: React.FC<NodeProps> = (props) => {
   const { nodeId } = props;
   const nodeRef = React.useRef(null);
   const [nodeState, setNodeState] = useRecoilState(nodeStateFamily(nodeId));
-  const style = { ...nodeState.position, ...nodeState.size };
+  const setShowEdit = useSetRecoilState(ShowEditState);
+  const setEditData = useSetRecoilState(EditDataState);
 
   const handleDrag = (e: any) => {
     setNodeState((nodeState) => {
@@ -93,6 +103,14 @@ const Node: React.FC<NodeProps> = (props) => {
     );
   };
 
+  const handleNodeClick = (_e: React.MouseEvent) => {
+    // e.persist();
+    // console.log("Node click", e);
+    console.log(nodeState.data);
+    setShowEdit(true);
+    setEditData({ type: "123", data: {} });
+  };
+
   return (
     <Draggable
       onDrag={handleDrag}
@@ -100,18 +118,11 @@ const Node: React.FC<NodeProps> = (props) => {
       position={{ x: nodeState.position.left, y: nodeState.position.top }}
     >
       <NodeWrapper style={nodeState.size}>
-        <InnerWrapper ref={nodeRef}>
-          {nodeState.id}
+        <InnerWrapper ref={nodeRef} onClick={handleNodeClick}>
+          <Content>{nodeState.name}</Content>
           {POSITIONS.map((position) => {
             return createPortWrapper(position);
           })}
-          {/* <RightPortsWrapper>
-            {nodeState.ports
-              .filter((port) => port.position === "Right")
-              .map((port) => (
-                <Port key={port.id} port={port} nodeId={nodeState.id} />
-              ))}
-          </RightPortsWrapper> */}
         </InnerWrapper>
       </NodeWrapper>
     </Draggable>

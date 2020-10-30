@@ -1,116 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { cloneDeep, mapValues } from "lodash";
+import React, { useState } from "react";
 import styled from "styled-components";
-import Func from "../components/Func";
-import Editor from "../components/Editor";
-import { FlowChart, Page } from "../flowchartnew";
+import { FlowChart } from "../flowchartnew";
 
 const PanelBg = styled.div`
   position: relative;
-  height: 100vh;
-  padding-top: 40px;
-`;
-const Outer = styled.div`
-  padding: 30px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border: 1px solid cornflowerblue;
   width: 100%;
+  height: calc(100vh - 40px);
+  padding-left: 200px;
+  box-sizing: border-box;
 `;
-
-const funcs = [
-  {
-    id: "func1",
-    name: "查询人口",
-    inputs: [
-      {
-        type: "number",
-        key: "age",
-        label: "年龄",
-      },
-      {
-        type: "enum",
-        key: "gender",
-        label: "性别",
-      },
-    ],
-    outputs: [
-      {
-        type: "object",
-        key: "citizen",
-        label: "公民信息",
-      },
-    ],
-  },
-  {
-    id: "func2",
-    name: "查询航班",
-    inputs: [
-      {
-        type: "string",
-        key: "department",
-        label: "出发地",
-      },
-      {
-        type: "string",
-        key: "arrival",
-        label: "到达地",
-      },
-      {
-        type: "timestamp",
-        key: "departdate",
-        label: "出发日期",
-      },
-      {
-        type: "timestamp",
-        key: "arrivedate",
-        label: "到达日期",
-      },
-    ],
-    outputs: [
-      {
-        type: "object",
-        key: "flightinfo",
-        label: "个人航程信息",
-      },
-    ],
-  },
-  {
-    id: "func3",
-    name: "查询高铁",
-    inputs: [
-      {
-        type: "string",
-        key: "department",
-        label: "出发地",
-      },
-      {
-        type: "string",
-        key: "arrival",
-        label: "到达地",
-      },
-      {
-        type: "timestamp",
-        key: "departdate",
-        label: "出发日期",
-      },
-      {
-        type: "timestamp",
-        key: "arrivedate",
-        label: "到达日期",
-      },
-    ],
-    outputs: [
-      {
-        type: "object",
-        key: "traininfo",
-        label: "个人高铁信息",
-      },
-    ],
-  },
-];
 
 const chartSimple: FC.IChart = {
   offset: {
@@ -120,46 +18,90 @@ const chartSimple: FC.IChart = {
   scale: 1,
   nodes: [
     {
-      id: "node1",
-      type: "output-only",
+      id: "node0",
+      name: "用户输入",
+      type: "Input",
       position: {
-        left: 300,
-        top: 100,
+        left: 500,
+        top: 20,
       },
       size: {
-        width: 300,
-        height: 100,
+        width: 200,
+        height: 80,
       },
       ports: [
         {
-          id: "port2",
+          id: "port0",
           position: "Bottom",
         },
+      ],
+    },
+    {
+      id: "node1",
+      name: "查询高铁",
+      type: "Func",
+      position: {
+        left: 330,
+        top: 200,
+      },
+      size: {
+        width: 200,
+        height: 80,
+      },
+      ports: [
         {
-          id: "port3",
+          id: "port0",
+          position: "Top",
+        },
+        {
+          id: "port1",
           position: "Bottom",
         },
       ],
     },
     {
       id: "node2",
-      type: "input-output",
+      name: "查询航班",
+      type: "Func",
       position: {
-        left: 300,
-        top: 300,
+        left: 650,
+        top: 200,
       },
       size: {
-        width: 300,
-        height: 100,
+        width: 200,
+        height: 80,
       },
       ports: [
         {
-          id: "port1",
+          id: "port0",
           position: "Top",
         },
         {
-          id: "port4",
+          id: "port1",
+          position: "Bottom",
+        },
+      ],
+    },
+    {
+      id: "node3",
+      name: "查询人口",
+      type: "Func",
+      position: {
+        left: 500,
+        top: 400,
+      },
+      size: {
+        width: 200,
+        height: 80,
+      },
+      ports: [
+        {
+          id: "port0",
           position: "Top",
+        },
+        {
+          id: "port1",
+          position: "Bottom",
         },
       ],
     },
@@ -168,25 +110,56 @@ const chartSimple: FC.IChart = {
     {
       id: "link1",
       from: {
+        nodeId: "node0",
+        portId: "port0",
+      },
+      to: {
         nodeId: "node1",
-        portId: "port2",
+        portId: "port0",
+      },
+    },
+    {
+      id: "link2",
+      from: {
+        nodeId: "node0",
+        portId: "port0",
       },
       to: {
         nodeId: "node2",
+        portId: "port0",
+      },
+    },
+    {
+      id: "link3",
+      from: {
+        nodeId: "node1",
         portId: "port1",
+      },
+      to: {
+        nodeId: "node3",
+        portId: "port0",
+      },
+    },
+    {
+      id: "link4",
+      from: {
+        nodeId: "node2",
+        portId: "port1",
+      },
+      to: {
+        nodeId: "node3",
+        portId: "port0",
       },
     },
   ],
 };
 
 const Panel = () => {
-  const [chartState, setChartState] = useState(chartSimple);
+  const [chartState] = useState(chartSimple);
 
   return (
     <PanelBg>
-      {/* <Page> */}
       <FlowChart chart={chartState} />
-      {/* </Page> */}
     </PanelBg>
   );
 };

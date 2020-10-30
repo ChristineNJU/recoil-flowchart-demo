@@ -20,7 +20,8 @@ export const nodeStateFamily = atomFamily<FC.INode, string>({
   key: "node",
   default: {
     id: "node",
-    type: "output-only",
+    name: "",
+    type: "Func",
     position: {
       left: 300,
       top: 100,
@@ -175,21 +176,32 @@ export const useAddNode = () => {
   const [nodesId, setNodesId] = useRecoilState(nodesState);
   return useRecoilCallback(
     ({ set }) => {
-      return () => {
+      return ({ data, type }) => {
         const newId = `node-${nodesId.length}`;
         setNodesId([...nodesId, newId]);
         set(nodeStateFamily(newId), {
           id: newId,
-          type: "output-only",
+          name: data.name,
+          data,
+          type: type,
           position: {
-            left: 300 * nodesId.length,
-            top: 100 * nodesId.length,
+            left: 50,
+            top: 50,
           },
           size: {
-            width: 300,
-            height: 200,
+            width: 150,
+            height: 80,
           },
-          ports: [],
+          ports: [
+            {
+              id: `${newId}-0`,
+              position: "Top",
+            },
+            {
+              id: `${newId}-1`,
+              position: "Bottom",
+            },
+          ],
         });
       };
     },
@@ -259,33 +271,31 @@ export const useMoveNewLink = () => {
 };
 
 export const useDownNewLink = () => {
-  // const [newLink, setNewLink] = useRecoilState(newLinkState);
-  const linkWithPos = useRecoilValue(newLinkWithPosition);
+  const newLink = useRecoilValue(newLinkState);
   const resetNewLink = useResetRecoilState(newLinkState);
   const addLink = useAddLink();
 
   return React.useCallback(
     (e: React.MouseEvent) => {
-      const el = e.target as HTMLElement;
-      const nodeId = el.getAttribute && el.getAttribute("data-node-id");
-      const portId = el.getAttribute && el.getAttribute("data-port-id");
-      if (nodeId && portId) {
-        addLink({
-          from: {
-            nodeId: linkWithPos.from.nodeId,
-            portId: linkWithPos.from.portId,
-          },
-          to: {
-            nodeId,
-            portId,
-          },
-        });
+      if (newLink.mouseDownPos) {
+        const el = e.target as HTMLElement;
+        const nodeId = el.getAttribute && el.getAttribute("data-node-id");
+        const portId = el.getAttribute && el.getAttribute("data-port-id");
+        if (nodeId && portId) {
+          addLink({
+            from: {
+              nodeId: newLink.from.nodeId,
+              portId: newLink.from.portId,
+            },
+            to: {
+              nodeId,
+              portId,
+            },
+          });
+        }
+        resetNewLink();
       }
-
-      console.log(e.target, nodeId, portId);
-      console.log(linkWithPos);
-      resetNewLink();
     },
-    [linkWithPos]
+    [newLink]
   );
 };

@@ -1,9 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import {
-  linkWithPosition,
-  newLinkWithPosition,
-} from "../../states/flowchartState";
+import { newLinkWithPosition } from "../../states/flowchartState";
 import { generateCurvePath } from "../utils/generatePath";
 
 const NewLink: React.FC = () => {
